@@ -8,25 +8,14 @@ WORKDIR /app
 # Install dependencies
 COPY package.json package-lock.json ./
 COPY scripts/postinstall.mjs ./scripts/postinstall.mjs
-RUN npm config set fetch-retries 5 \
-    && npm config set fetch-retry-factor 2 \
-    && npm config set fetch-retry-mintimeout 10000 \
-    && npm config set fetch-retry-maxtimeout 120000 \
-    && attempt=1 \
-    && until npm ci; do \
-      if [ "$attempt" -ge 3 ]; then \
-        exit 1; \
-      fi; \
-      echo "npm ci failed on attempt ${attempt}; retrying..." >&2; \
-      sleep $((attempt * 5)); \
-      attempt=$((attempt + 1)); \
-    done
+RUN npm install --frozen-lockfile 2>/dev/null \
+    || npm install
 
 # Copy source
 COPY . .
 
 # Build
-RUN SWARMCLAW_BUILD_MODE=1 npm run build:ci
+RUN ONEMIND_BUILD_MODE=1 npm run build:ci
 
 # Production
 FROM node:22-slim AS runner
