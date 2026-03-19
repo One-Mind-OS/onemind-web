@@ -3288,3 +3288,80 @@ export interface GatewaySessionPreview {
 
 // --- Gateway Reload Mode (F21) ---
 export type GatewayReloadMode = 'hot' | 'hybrid' | 'full'
+
+// ---------------------------------------------------------------------------
+// Gamification Types (extracted from Flutter reference)
+// ---------------------------------------------------------------------------
+
+export type AchievementCategory = 'system' | 'productivity' | 'exploration' | 'mastery' | 'agents' | 'general'
+
+export interface Achievement {
+  id: string
+  title: string
+  description: string
+  icon: string
+  xpReward: number
+  category: AchievementCategory
+  unlocked: boolean
+  unlockedAt?: string
+}
+
+export type SkillBranch = 'command' | 'intel' | 'engineering' | 'combat' | 'exploration'
+
+export interface SkillNode {
+  id: string
+  name: string
+  description: string
+  icon: string
+  branch: SkillBranch
+  levelRequired: number
+  prerequisites?: string[]
+  unlocked: boolean
+}
+
+export type OpStatus = 'pending' | 'inProgress' | 'completed' | 'failed'
+
+export interface DailyOp {
+  id: string
+  title: string
+  description: string
+  status: OpStatus
+  xpReward: number
+  creditsReward: number
+  deadline?: string
+  schedule: string
+  progress: number
+  completedToday: boolean
+  notes: string
+  streak: number
+}
+
+export type MissionDifficulty = 'easy' | 'medium' | 'hard' | 'expert'
+
+export interface GameMission {
+  id: string
+  title: string
+  description: string
+  difficulty: MissionDifficulty
+  status: MissionStatus
+  xpReward: number
+  creditsReward: number
+  objectives: string[]
+  progress: number
+  deadline?: string
+}
+
+export interface GameState {
+  audioEnabled: boolean
+  darkMode: boolean
+  lastLoginDate: string
+  level: number
+  xp: number
+  streak: number
+  gold: number
+  achievements: Achievement[]
+  skills: SkillNode[]
+  dailyOps: DailyOp[]
+  missions: GameMission[]
+  visitedScreens: string[]
+}

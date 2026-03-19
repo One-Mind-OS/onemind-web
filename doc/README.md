@@ -46,6 +46,8 @@
 | [NOTIFICATION-SYSTEM](features/NOTIFICATION-SYSTEM.md) | Multi-channel routing, awareness modes, escalation | ⚠️ Partial (in-app only) |
 | [NAVIGATION-SYSTEM](features/NAVIGATION-SYSTEM.md) | 6-section nav with Solarpunk remap | ⚠️ Routes exist, Solarpunk styling pending |
 | [UNIFIED-INBOX-SYSTEM](features/UNIFIED-INBOX-SYSTEM.md) | Task + notification + approval hub | ⚠️ Connector inbox only |
+| [GAMIFICATION-SYSTEM](features/GAMIFICATION-SYSTEM.md) | XP, levels, achievements, skill tree, daily ops | ✅ Types + constants extracted |
+| [GAME-VISUALIZATION](features/GAME-VISUALIZATION.md) | Node topology graph, particles, audio events | ✅ Constants extracted |
 | [NOTE-TOOL](features/NOTE-TOOL.md) | Note capture tool specification | ❌ Not implemented |
 | [ONEMIND_SUPERPOWER_CHAT_ANALYSIS](features/ONEMIND_SUPERPOWER_CHAT_ANALYSIS.md) | Deep chat UX analysis and power-user workflows | Reference |
 

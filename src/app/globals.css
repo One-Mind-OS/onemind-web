@@ -115,6 +115,32 @@
   --sp-alert: #EB9E3A;
   --sp-community: #9CAF88;
   --sp-wellness: #E8B4B8;
+
+  /* ===== Tactical Dark Theme (Zeus Red + Cyan) ===== */
+  --td-primary: #E63946;
+  --td-primary-dim: #B82D3A;
+  --td-primary-glow: #FF4D5A;
+  --td-cyan: #00D9FF;
+  --td-cyan-dim: #00A8CC;
+  --td-cyan-glow: #33E0FF;
+
+  /* ===== Tactical Solarpunk Theme (Amber + Moss) ===== */
+  --ts-primary: #FFB703;
+  --ts-primary-dim: #D99000;
+  --ts-primary-glow: #FFC933;
+  --ts-moss: #52B788;
+  --ts-moss-dim: #2D6A4F;
+  --ts-moss-glow: #74C69D;
+  --ts-bg: #0A1810;
+  --ts-surface: #122820;
+  --ts-card: #1A3328;
+
+  /* ===== Agent Category Colors ===== */
+  --cat-code: #3B82F6;
+  --cat-research: #8B5CF6;
+  --cat-creative: #EC4899;
+  --cat-productivity: #10B981;
+  --cat-iot: #06B6D4;
 }
 
 :root {
