@@ -90,3 +90,6 @@ IMPROVEMENTS.md
 # Archive large binary files
 _archive/design-reference/frontend design/ui-ideas/
 _archive/reference/openclaw-studio/*.png
+
+# External references (not part of this project)
+references/
