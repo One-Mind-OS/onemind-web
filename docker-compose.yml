@@ -1,6 +1,6 @@
 services:
   swarmclaw:
-    image: ghcr.io/swarmclawai/swarmclaw:latest
+    image: ghcr.io/one-mind-os/onemind-web:latest
     build: .
     ports:
       - "3456:3456"

@@ -227,7 +227,7 @@ export default function HomePage() {
           {/* Header */}
           <div className="mb-10" style={{ animation: 'spring-in 0.6s var(--ease-spring)' }}>
             <h1 className="font-display text-[28px] font-700 text-text tracking-[-0.03em]">
-              SwarmClaw
+              OneMind
             </h1>
             <p className="text-[14px] text-text-3 mt-1">
               Workspace overview for your agent chats, tasks, and automations

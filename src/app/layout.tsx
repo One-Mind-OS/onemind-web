@@ -5,8 +5,8 @@ import { DashboardShell } from "@/components/layout/dashboard-shell"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "SwarmClaw",
-  description: "Self-hosted AI runtime for OpenClaw, agent swarms, runtime skills, and wallets.",
+  title: "OneMind",
+  description: "OneMind OS — Unified command center for agent management, tasks, missions, and multi-agent coordination.",
 }
 
 export const viewport: Viewport = {

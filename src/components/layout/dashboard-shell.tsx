@@ -23,7 +23,7 @@ import { CommandPalette } from '@/components/shared/command-palette'
 import type { AppView } from '@/types'
 
 const STAR_NOTIFICATION_KEY = 'sc_star_notification_v1'
-const GITHUB_REPO_URL = 'https://github.com/swarmclawai/swarmclaw'
+const GITHUB_REPO_URL = 'https://github.com/One-Mind-OS/onemind-web'
 
 const AUTH_PATHS = new Set(['/login', '/setup', '/user'])
 
@@ -130,8 +130,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     safeStorageSet(STAR_NOTIFICATION_KEY, '1')
     void api('POST', '/notifications', {
       type: 'info',
-      title: 'Enjoying SwarmClaw?',
-      message: 'If SwarmClaw helps your workflow, please star the GitHub repo to support the project.',
+      title: 'Enjoying OneMind?',
+      message: 'If OneMind helps your workflow, please star the GitHub repo to support the project.',
       actionLabel: 'Star on GitHub',
       actionUrl: GITHUB_REPO_URL,
       entityType: 'support',
