@@ -1,0 +1,73 @@
+import { NextResponse } from 'next/server'
+import { notFound } from '@/lib/server/collection-helpers'
+import { getMemoryDb } from '@/lib/server/memory/memory-db'
+
+export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const db = getMemoryDb()
+  const entry = db.get(id)
+  if (!entry || entry.category !== 'knowledge') {
+    return notFound()
+  }
+  return NextResponse.json(entry)
+}
+
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const db = getMemoryDb()
+  const existing = db.get(id)
+  if (!existing || existing.category !== 'knowledge') {
+    return notFound()
+  }
+
+  const body = await req.json().catch(() => null)
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 })
+  }
+
+  const { title, content, tags, scope, agentIds } = body as Record<string, unknown>
+
+  const updates: Record<string, unknown> = {}
+  if (typeof title === 'string' && title.trim()) {
+    updates.title = title.trim()
+  }
+  if (typeof content === 'string') {
+    updates.content = content
+  }
+
+  const existingMeta = (existing.metadata || {}) as Record<string, unknown>
+  const metaUpdates: Record<string, unknown> = { ...existingMeta }
+
+  if (Array.isArray(tags)) {
+    const normalizedTags = (tags as unknown[]).filter(
+      (t): t is string => typeof t === 'string' && t.trim().length > 0,
+    )
+    metaUpdates.tags = normalizedTags
+  }
+
+  if (scope === 'global' || scope === 'agent') {
+    metaUpdates.scope = scope
+    metaUpdates.agentIds = scope === 'agent' && Array.isArray(agentIds)
+      ? (agentIds as unknown[]).filter((id): id is string => typeof id === 'string')
+      : []
+  }
+
+  updates.metadata = metaUpdates
+
+  const updated = db.update(id, updates)
+  if (!updated) {
+    return notFound()
+  }
+  return NextResponse.json(updated)
+}
+
+export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const db = getMemoryDb()
+  const existing = db.get(id)
+  if (!existing || existing.category !== 'knowledge') {
+    return notFound()
+  }
+  db.delete(id)
+  return NextResponse.json({ deleted: id })
+}

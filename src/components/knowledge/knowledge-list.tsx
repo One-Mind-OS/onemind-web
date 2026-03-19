@@ -1,0 +1,235 @@
+'use client'
+
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { api } from '@/lib/app/api-client'
+import { useAppStore } from '@/stores/use-app-store'
+import { Badge } from '@/components/ui/badge'
+import { AgentAvatar } from '@/components/agents/agent-avatar'
+import { EmptyState } from '@/components/shared/empty-state'
+import { PageLoader } from '@/components/ui/page-loader'
+import { SearchInput } from '@/components/ui/search-input'
+import type { MemoryEntry } from '@/types'
+
+export function KnowledgeList() {
+  const [search, setSearch] = useState('')
+  const [entries, setEntries] = useState<MemoryEntry[]>([])
+  const [loaded, setLoaded] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [activeTag, setActiveTag] = useState<string | null>(null)
+  const searchRef = useRef(search)
+  const agents = useAppStore((s) => s.agents)
+  const loadAgents = useAppStore((s) => s.loadAgents)
+  const setKnowledgeSheetOpen = useAppStore((s) => s.setKnowledgeSheetOpen)
+  const setEditingKnowledgeId = useAppStore((s) => s.setEditingKnowledgeId)
+
+  const openSheet = useCallback((id?: string) => {
+    setEditingKnowledgeId(id ?? null)
+    setKnowledgeSheetOpen(true)
+  }, [setEditingKnowledgeId, setKnowledgeSheetOpen])
+
+  const load = useCallback(async (query: string, tag?: string | null) => {
+    try {
+      const params = new URLSearchParams()
+      if (query) params.set('q', query)
+      if (tag) params.set('tags', tag)
+      const qs = params.toString()
+      const results = await api<MemoryEntry[]>('GET', `/knowledge${qs ? `?${qs}` : ''}`)
+      setEntries(Array.isArray(results) ? results : [])
+      setError(null)
+    } catch {
+      setError('Unable to load knowledge entries.')
+    }
+    setLoaded(true)
+  }, [])
+
+  useEffect(() => { searchRef.current = search }, [search])
+
+  // Initial load
+  useEffect(() => {
+    loadAgents()
+    const timer = setTimeout(() => { void load(searchRef.current, activeTag) }, 0)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [load, activeTag])
+
+  // Debounced search
+  useEffect(() => {
+    const timer = setTimeout(() => { void load(search, activeTag) }, 300)
+    return () => clearTimeout(timer)
+  }, [search, load, activeTag])
+
+  const uniqueTags = useMemo(() => {
+    const tags = new Set<string>()
+    for (const e of entries) {
+      const meta = e.metadata as { tags?: string[] } | undefined
+      if (meta?.tags) for (const t of meta.tags) tags.add(t)
+    }
+    return Array.from(tags).sort()
+  }, [entries])
+
+  const handleDelete = async (id: string) => {
+    try {
+      await api('DELETE', `/knowledge/${id}`)
+      setEntries((prev) => prev.filter((e) => e.id !== id))
+    } catch {
+      // silent
+    }
+  }
+
+  const formatDate = (ts: number) => {
+    return new Date(ts).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+  }
+
+  if (!loaded) {
+    return <PageLoader label="Loading knowledge..." />
+  }
+
+  return (
+    <div className="flex-1 flex flex-col overflow-y-auto">
+      {/* Search — only show when there are entries */}
+      {entries.length > 0 && (
+        <div className="px-5 py-2 shrink-0" style={{ animation: 'fade-up 0.4s var(--ease-spring)' }}>
+          <SearchInput
+            size="sm"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onClear={() => setSearch('')}
+            placeholder="Search knowledge..."
+          />
+        </div>
+      )}
+
+      {/* Tag filters */}
+      {uniqueTags.length > 0 && (
+        <div className="px-5 pb-1.5 shrink-0" style={{ animation: 'fade-up 0.4s var(--ease-spring) 0.05s both' }}>
+          <div className="flex gap-1 flex-wrap">
+            <button
+              onClick={() => setActiveTag(null)}
+              className={`px-2 py-0.5 rounded-[6px] text-[9px] font-600 cursor-pointer transition-all uppercase tracking-wider
+                ${!activeTag ? 'bg-white/[0.06] text-text-2' : 'bg-transparent text-text-3/70 hover:text-text-3'}`}
+              style={{ fontFamily: 'inherit' }}
+            >
+              all
+            </button>
+            {uniqueTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                className={`px-2 py-0.5 rounded-[6px] text-[9px] font-600 cursor-pointer transition-all uppercase tracking-wider
+                  ${activeTag === tag ? 'bg-white/[0.06] text-text-2' : 'bg-transparent text-text-3/70 hover:text-text-3'}`}
+                style={{ fontFamily: 'inherit' }}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Entries */}
+      {entries.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 px-5 pb-6">
+          {entries.map((entry, idx) => {
+            const meta = entry.metadata as { tags?: string[]; scope?: 'global' | 'agent'; agentIds?: string[] } | undefined
+            const tags = meta?.tags || []
+            const entryScope = meta?.scope || 'global'
+            const entryAgentIds = meta?.agentIds || []
+            const scopeLabel = entryScope === 'global' ? 'Global' : `${entryAgentIds.length} agent(s)`
+            const scopedAgents = entryScope === 'agent'
+              ? entryAgentIds.map((id) => agents[id]).filter(Boolean)
+              : []
+            return (
+              <div
+                key={entry.id}
+                className="p-3 rounded-[12px] border border-white/[0.04] bg-transparent hover:bg-surface-2 transition-all relative group hover:scale-[1.01] hover:border-white/[0.1]"
+                style={{
+                  animation: 'spring-in 0.5s var(--ease-spring) both',
+                  animationDelay: `${0.1 + idx * 0.03}s`
+                }}
+              >
+                <div className="flex items-start justify-between gap-2 mb-1">
+                  <span className="font-display text-[13px] font-600 text-text truncate">{entry.title}</span>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button
+                      onClick={() => openSheet(entry.id)}
+                      className="text-text-3/40 hover:text-accent-bright transition-colors p-0.5 cursor-pointer"
+                      title="Edit"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => void handleDelete(entry.id)}
+                      className="text-text-3/40 hover:text-red-400 transition-colors p-0.5 cursor-pointer"
+                      title="Delete"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      </svg>
+                    </button>
+                    <span className="text-[10px] text-text-3/50">{formatDate(entry.createdAt)}</span>
+                  </div>
+                </div>
+                <p className="text-[11px] text-text-3/60 line-clamp-2 mb-2">
+                  {entry.content.slice(0, 200)}
+                </p>
+                {tags.length > 0 && (
+                  <div className="flex gap-1 flex-wrap">
+                    {tags.map((t) => (
+                      <Badge key={t} variant="secondary" className="text-[9px] px-1.5 py-0">{t}</Badge>
+                    ))}
+                  </div>
+                )}
+                <div className="flex items-center gap-2 mt-1.5">
+                  <span className={`text-[10px] font-600 ${
+                    entryScope === 'global' ? 'text-emerald-400' : 'text-amber-400'
+                  }`}>
+                    {scopeLabel}
+                  </span>
+                  {scopedAgents.length > 0 && (
+                    <div className="flex items-center gap-1.5">
+                      <div className="flex items-center -space-x-1.5">
+                        {scopedAgents.slice(0, 5).map((agent) => (
+                          <AgentAvatar key={agent.id} seed={agent.avatarSeed} avatarUrl={agent.avatarUrl} name={agent.name} size={16} className="ring-1 ring-surface" />
+                        ))}
+                      </div>
+                      {scopedAgents.length > 5 && (
+                        <span className="text-[10px] font-600 text-text-3/60 ml-0.5">+{scopedAgents.length - 5}</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      ) : error ? (
+        <div className="flex-1 flex flex-col items-center justify-center gap-3 text-text-3 p-8 text-center" style={{ animation: 'fade-up 0.5s var(--ease-spring)' }}>
+          <p className="font-display text-[14px] font-600 text-text-2">Couldn&apos;t load knowledge</p>
+          <p className="text-[12px] text-text-3/60">{error}</p>
+          <button
+            onClick={() => { void load(search, activeTag) }}
+            className="px-3 py-1.5 rounded-[8px] bg-accent-soft text-accent-bright text-[12px] font-600 cursor-pointer border-none"
+            style={{ fontFamily: 'inherit' }}
+          >
+            Retry
+          </button>
+        </div>
+      ) : loaded ? (
+        <EmptyState
+          icon={
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-accent-bright">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            </svg>
+          }
+          title="No knowledge entries yet"
+          subtitle="Add shared knowledge for your agents"
+          action={{ label: '+ Add Knowledge', onClick: () => openSheet() }}
+        />
+      ) : null}
+    </div>
+  )
+}
