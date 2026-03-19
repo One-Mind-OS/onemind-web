@@ -5,7 +5,8 @@ services:
     ports:
       - "3456:3456"
       - "3457:3457"
+    env_file:
+      - .env.local
     volumes:
       - ./data:/app/data
-      - ./.env.local:/app/.env.local
     restart: unless-stopped
