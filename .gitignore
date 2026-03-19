@@ -85,3 +85,7 @@ IMPROVEMENTS.md
 
 # superpowers skill docs (local only)
 /docs/superpowers/
+
+# Archive large binary files
+_archive/design-reference/frontend design/ui-ideas/
+_archive/reference/openclaw-studio/*.png

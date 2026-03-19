@@ -77,6 +77,44 @@
   --radius-pill: 9999px;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ===== Solarpunk Palette ===== */
+  /* Primary */
+  --sp-solar-gold: #F4A825;
+  --sp-moss-green: #4A7C59;
+  --sp-sky-teal: #2D8A8A;
+  --sp-terracotta: #C1694F;
+  --sp-cream: #F5F1E6;
+  --sp-deep-loam: #1E2420;
+
+  /* Secondary / Accent */
+  --sp-dawn-pink: #E8B4B8;
+  --sp-lichen: #8FBC8F;
+  --sp-amber-glow: #FFD93D;
+  --sp-storm-cloud: #5D6D7E;
+  --sp-copper: #B87333;
+
+  /* Path-Specific */
+  --sp-path-hp: #228B22;       /* HP (Self) — Forest Green */
+  --sp-path-le: #EB9E3A;       /* LE (Kin) — Warm Honey */
+  --sp-path-ge: #1A5F5F;       /* GE (Work) — Deep Teal */
+  --sp-path-commons: #9CAF88;  /* Commons — Sage */
+
+  /* Gradients */
+  --sp-grad-sunrise: linear-gradient(135deg, #F4A825, #E8B4B8);
+  --sp-grad-forest-floor: linear-gradient(180deg, #4A7C59, #1E2420);
+  --sp-grad-golden-hour: linear-gradient(135deg, #FFD93D, #C1694F);
+  --sp-grad-ocean-breath: linear-gradient(135deg, #2D8A8A, #9CAF88);
+  --sp-grad-dawn: linear-gradient(135deg, #E8B4B8, #F5F1E6);
+  --sp-grad-dusk: linear-gradient(180deg, #5D6D7E, #1E2420);
+
+  /* Semantic (dark mode) */
+  --sp-growth: #8FBC8F;
+  --sp-energy: #FFD93D;
+  --sp-calm: #2D8A8A;
+  --sp-alert: #EB9E3A;
+  --sp-community: #9CAF88;
+  --sp-wellness: #E8B4B8;
 }
 
 :root {
@@ -142,6 +180,20 @@
   --command-bg: #0a0a14;
   --command-border: rgba(255,255,255,0.06);
   --command-header: rgba(0,0,0,0.3);
+
+  /* ===== Solarpunk Path Badges ===== */
+  --path-hp-bg: rgba(34,139,34,0.08);
+  --path-hp-border: rgba(34,139,34,0.15);
+  --path-hp-fg: #228B22;
+  --path-le-bg: rgba(235,158,58,0.08);
+  --path-le-border: rgba(235,158,58,0.15);
+  --path-le-fg: #EB9E3A;
+  --path-ge-bg: rgba(26,95,95,0.08);
+  --path-ge-border: rgba(26,95,95,0.15);
+  --path-ge-fg: #1A5F5F;
+  --path-commons-bg: rgba(156,175,136,0.08);
+  --path-commons-border: rgba(156,175,136,0.15);
+  --path-commons-fg: #9CAF88;
 }
 
 @layer base {
