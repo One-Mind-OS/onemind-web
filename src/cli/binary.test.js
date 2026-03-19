@@ -7,9 +7,9 @@ const fs = require('node:fs')
 const os = require('node:os')
 const path = require('node:path')
 const { spawnSync } = require('node:child_process')
-const { buildLegacyTsCliArgs } = require('../../bin/swarmclaw.js')
+const { buildLegacyTsCliArgs } = require('../../bin/onemind.js')
 
-const CLI_BIN = path.join(__dirname, '..', '..', 'bin', 'swarmclaw.js')
+const CLI_BIN = path.join(__dirname, '..', '..', 'bin', 'onemind.js')
 const PACKAGE_JSON = require('../../package.json')
 const APP_ROOT = path.join(__dirname, '..', '..')
 

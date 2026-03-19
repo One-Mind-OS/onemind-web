@@ -28,7 +28,7 @@ test('resolvePackageRoot finds the package root from argv1 candidates', () => {
   const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), 'swarmclaw-install-root-'))
   const pkgRoot = path.join(rootDir, 'node_modules', '@swarmclawai', 'swarmclaw')
   const binPath = path.join(rootDir, 'node_modules', '.bin', 'swarmclaw')
-  const actualBin = path.join(pkgRoot, 'bin', 'swarmclaw.js')
+  const actualBin = path.join(pkgRoot, 'bin', 'onemind.js')
 
   fs.mkdirSync(path.join(pkgRoot, 'bin'), { recursive: true })
   fs.mkdirSync(path.dirname(binPath), { recursive: true })

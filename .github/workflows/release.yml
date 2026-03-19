@@ -95,7 +95,7 @@ jobs:
         id: npm_version
         run: |
           VERSION="${{ steps.package_version.outputs.version }}"
-          if npm view "@swarmclawai/swarmclaw@${VERSION}" version >/dev/null 2>&1; then
+          if npm view "@onemind-os/onemind-ui@${VERSION}" version >/dev/null 2>&1; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
             echo "Version ${VERSION} already exists on npm; publish step will be skipped."
           else
@@ -114,11 +114,11 @@ jobs:
         if: always()
         run: |
           if [ "${{ steps.npm_version.outputs.exists }}" = "true" ]; then
-            echo "npm publish skipped because @swarmclawai/swarmclaw@${{ steps.package_version.outputs.version }} already exists." >> "$GITHUB_STEP_SUMMARY"
+            echo "npm publish skipped because @onemind-os/onemind-ui@${{ steps.package_version.outputs.version }} already exists." >> "$GITHUB_STEP_SUMMARY"
           elif [ "${{ steps.npm_publish.outcome }}" = "success" ]; then
-            echo "npm publish succeeded for @swarmclawai/swarmclaw@${{ steps.package_version.outputs.version }}." >> "$GITHUB_STEP_SUMMARY"
+            echo "npm publish succeeded for @onemind-os/onemind-ui@${{ steps.package_version.outputs.version }}." >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "npm publish failed for @swarmclawai/swarmclaw@${{ steps.package_version.outputs.version }}. GitHub release creation will continue; rerun after restoring npm credentials or publish the version manually." >> "$GITHUB_STEP_SUMMARY"
+            echo "npm publish failed for @onemind-os/onemind-ui@${{ steps.package_version.outputs.version }}. GitHub release creation will continue; rerun after restoring npm credentials or publish the version manually." >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Prepare release body
@@ -128,7 +128,7 @@ jobs:
           BODY_PATH="$(mktemp)"
           if [ "${{ steps.npm_version.outputs.exists }}" = "true" ] || [ "${{ steps.npm_publish.outcome }}" = "success" ]; then
             echo "## Install" >> "$BODY_PATH"
-            echo "- \`npm install -g @swarmclawai/swarmclaw@${{ steps.package_version.outputs.version }}\`" >> "$BODY_PATH"
+            echo "- \`npm install -g @onemind-os/onemind-ui@${{ steps.package_version.outputs.version }}\`" >> "$BODY_PATH"
           else
             echo "## Install" >> "$BODY_PATH"
             echo "- npm package publish is pending for \`${{ github.ref_name }}\`; rerun this workflow after restoring npm credentials or publish the version manually." >> "$BODY_PATH"

@@ -82,7 +82,7 @@ test('CLI command map covers all API route method/path pairs', () => {
 })
 
 test('Binary CLI router reaches every mapped API command pair', async () => {
-  const { shouldUseLegacyTsCli, TS_CLI_ACTIONS } = await import('../../bin/swarmclaw.js')
+  const { shouldUseLegacyTsCli, TS_CLI_ACTIONS } = await import('../../bin/onemind.js')
 
   for (const command of COMMANDS) {
     if (command.virtual) continue

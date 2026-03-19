@@ -11,7 +11,7 @@ const LOCKFILE_NAMES = [
   'bun.lock',
   'bun.lockb',
 ]
-const INSTALL_METADATA_FILE = '.swarmclaw-install.json'
+const INSTALL_METADATA_FILE = '.onemind-install.json'
 
 function normalizePackageManager(raw) {
   switch (String(raw || '').trim().toLowerCase()) {

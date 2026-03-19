@@ -98,14 +98,14 @@ function normalizeLegacyCliEnv(env) {
 
 function printPackageVersion() {
   const pkg = require('../package.json')
-  process.stdout.write(`${pkg.name || 'swarmclaw'} ${pkg.version || '0.0.0'}\n`)
+  process.stdout.write(`${pkg.name || 'onemind'} ${pkg.version || '0.0.0'}\n`)
 }
 
 function printVersionHelp() {
   process.stdout.write(`
-Usage: swarmclaw version
+Usage: onemind version
 
-Show the installed SwarmClaw package version.
+Show the installed OneMind package version.
 `.trim() + '\n')
 }
 

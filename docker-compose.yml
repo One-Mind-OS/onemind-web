@@ -1,5 +1,5 @@
 services:
-  swarmclaw:
+  onemind:
     image: ghcr.io/one-mind-os/onemind-web:latest
     build: .
     ports:

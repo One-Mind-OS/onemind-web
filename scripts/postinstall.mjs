@@ -4,7 +4,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
-const INSTALL_METADATA_FILE = '.swarmclaw-install.json'
+const INSTALL_METADATA_FILE = '.onemind-install.json'
 const scriptDir = path.dirname(fileURLToPath(import.meta.url))
 const packageRoot = path.resolve(scriptDir, '..')
 const ensureSandboxBrowserScript = path.join(packageRoot, 'scripts', 'ensure-sandbox-browser-image.mjs')
